@@ -14,10 +14,11 @@ public class Schedule {
     private long id;
 
     @ManyToMany
-    private List<Employee> employeeIds;
+    private List<Employee> employees;
 
     @ManyToMany
-    private List<Pet> petIds;
+    private List<Pet> pets;
+
     private LocalDate date;
 
     @ElementCollection
@@ -31,20 +32,20 @@ public class Schedule {
         this.id = id;
     }
 
-    public List<Employee> getEmployeeIds() {
-        return employeeIds;
+    public List<Employee> getEmployees() {
+        return employees;
     }
 
-    public void setEmployeeIds(List<Employee> employeeIds) {
-        this.employeeIds = employeeIds;
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
     }
 
-    public List<Pet> getPetIds() {
-        return petIds;
+    public List<Pet> getPets() {
+        return pets;
     }
 
-    public void setPetIds(List<Pet> petIds) {
-        this.petIds = petIds;
+    public void setPets(List<Pet> pets) {
+        this.pets = pets;
     }
 
     public LocalDate getDate() {

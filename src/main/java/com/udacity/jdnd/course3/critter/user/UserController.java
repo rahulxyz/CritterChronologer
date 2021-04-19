@@ -1,10 +1,21 @@
 package com.udacity.jdnd.course3.critter.user;
 
+import com.udacity.jdnd.course3.critter.Utils;
+import com.udacity.jdnd.course3.critter.entity.Customer;
+import com.udacity.jdnd.course3.critter.entity.Employee;
+import com.udacity.jdnd.course3.critter.entity.Pet;
+import com.udacity.jdnd.course3.critter.service.CustomerService;
+import com.udacity.jdnd.course3.critter.service.EmployeeService;
+import com.udacity.jdnd.course3.critter.service.PetService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Handles web requests related to Users.
@@ -16,29 +27,69 @@ import java.util.Set;
 @RequestMapping("/user")
 public class UserController {
 
+    @Autowired
+    CustomerService customerService;
+
+    @Autowired
+    EmployeeService employeeService;
+
+    @Autowired
+    PetService petService;
+
     @PostMapping("/customer")
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO){
-        throw new UnsupportedOperationException();
+        Customer customer = Utils.convertDTOToCustomerEntity(customerDTO);
+
+        List<Long> petIds = customerDTO.getPetIds();
+        List<Pet> petList;
+        if(petIds == null){
+            petList = Arrays.asList();
+        }else{
+            petList = petIds.stream().map(id -> petService.getPetById(id)).collect(Collectors.toList());
+        }
+
+        customer.setPets(petList);
+
+        customer = customerService.save(customer);
+
+        customerDTO.setId(customer.getId());
+        return customerDTO;
     }
 
     @GetMapping("/customer")
     public List<CustomerDTO> getAllCustomers(){
-        throw new UnsupportedOperationException();
+        List<Customer> customerList = customerService.getAllCustomer();
+        List<CustomerDTO> customerDTOList = customerList.stream().map(customer -> Utils.convertEntityToCustomerDTO(customer)).collect(Collectors.toList());
+        return customerDTOList;
     }
 
     @GetMapping("/customer/pet/{petId}")
-    public CustomerDTO getOwnerByPet(@PathVariable long petId){
-        throw new UnsupportedOperationException();
+    public CustomerDTO getOwnerByPet(@PathVariable Long petId){
+
+        //throw new UnsupportedOperationException();
+        Pet pet = petService.getPetById(petId);
+        if(pet == null){
+            throw new UnsupportedOperationException("No pet found");
+        }
+
+        Customer customer = customerService.getCustomerByPets(pet);
+        CustomerDTO customerDTO = Utils.convertEntityToCustomerDTO(customer);
+        customerDTO.setPetIds(Arrays.asList(petId));
+        return customerDTO;
     }
 
     @PostMapping("/employee")
     public EmployeeDTO saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
-        throw new UnsupportedOperationException();
+        Employee employee = Utils.convertDTOToEmployeeEntity(employeeDTO);
+        employee = employeeService.save(employee);
+        employeeDTO.setId(employee.getId());
+        return employeeDTO;
     }
 
     @PostMapping("/employee/{employeeId}")
     public EmployeeDTO getEmployee(@PathVariable long employeeId) {
-        throw new UnsupportedOperationException();
+        Employee employee = employeeService.findByEmployeeId(employeeId);
+        return Utils.convertEntityToEmployeeDTO(employee);
     }
 
     @PutMapping("/employee/{employeeId}")

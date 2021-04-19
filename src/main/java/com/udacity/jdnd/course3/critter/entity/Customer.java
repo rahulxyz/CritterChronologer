@@ -15,6 +15,13 @@ public class Customer {
     @OneToMany(fetch= FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Pet> pets;
 
+    public void addPet(Pet pet) {
+        if(pets == null){
+           pets = new java.util.ArrayList<>();
+        }
+        pets.add(pet);
+    }
+
     public long getId() {
         return id;
     }
