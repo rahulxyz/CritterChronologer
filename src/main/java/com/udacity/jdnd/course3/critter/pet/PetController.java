@@ -60,6 +60,7 @@ public class PetController {
         List<PetDTO> updatedList = petDTOList.stream().map(petDTO -> {
             petDTO.setOwnerId(ownerId);
             return petDTO;}).collect(Collectors.toList());
+
         return updatedList;
     }
 }
