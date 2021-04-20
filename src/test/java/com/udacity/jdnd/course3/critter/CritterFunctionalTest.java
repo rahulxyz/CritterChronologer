@@ -33,8 +33,7 @@ import java.util.stream.IntStream;
  */
 @Transactional
 @SpringBootTest(classes = {
-        CritterApplication.class,
-        H2DatabaseConfig.class
+        CritterApplication.class
 })
 public class CritterFunctionalTest {
 
