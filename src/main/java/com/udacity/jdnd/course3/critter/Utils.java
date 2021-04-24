@@ -3,7 +3,9 @@ package com.udacity.jdnd.course3.critter;
 import com.udacity.jdnd.course3.critter.entity.Customer;
 import com.udacity.jdnd.course3.critter.entity.Employee;
 import com.udacity.jdnd.course3.critter.entity.Pet;
+import com.udacity.jdnd.course3.critter.entity.Schedule;
 import com.udacity.jdnd.course3.critter.pet.PetDTO;
+import com.udacity.jdnd.course3.critter.schedule.ScheduleDTO;
 import com.udacity.jdnd.course3.critter.user.CustomerDTO;
 import com.udacity.jdnd.course3.critter.user.EmployeeDTO;
 import org.springframework.beans.BeanUtils;
@@ -52,5 +54,31 @@ public class Utils {
         customerDTO.setPetIds(petIds);
 
         return customerDTO;
+    }
+
+    public static Schedule convertDTOToScheduleEntity(ScheduleDTO scheduleDTO){
+        Schedule schedule= new Schedule();
+        BeanUtils.copyProperties(scheduleDTO, schedule);
+        return schedule;
+    }
+
+    public static ScheduleDTO convertEntityToScheduleDTO(Schedule schedule){
+        ScheduleDTO scheduleDTO = new ScheduleDTO();
+        BeanUtils.copyProperties(schedule, scheduleDTO);
+
+        List<Pet> pets = schedule.getPets();
+        List<Long> petIds = pets.stream()
+                .map(pet -> pet.getId())
+                .collect(Collectors.toList());
+
+        List<Employee> employees = schedule.getEmployees();
+        List<Long> empIds = employees.stream()
+                .map(e -> e.getId())
+                .collect(Collectors.toList());
+
+        scheduleDTO.setPetIds(petIds);
+        scheduleDTO.setEmployeeIds(empIds);
+
+        return scheduleDTO;
     }
 }

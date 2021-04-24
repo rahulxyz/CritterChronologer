@@ -96,7 +96,9 @@ public class UserController {
 
     @GetMapping("/employee/availability")
     public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
-        throw new UnsupportedOperationException();
+        List<Employee> employees = employeeService.findEmployeesBySkillAndDate(employeeDTO.getSkills(), employeeDTO.getDate());
+        List<EmployeeDTO> employeeDTOs = employees.stream().map(e-> Utils.convertEntityToEmployeeDTO(e)).collect(Collectors.toList());
+        return employeeDTOs;
     }
 
 }

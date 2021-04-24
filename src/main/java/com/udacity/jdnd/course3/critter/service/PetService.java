@@ -34,7 +34,7 @@ public class PetService {
     }
 
     public Pet getPetById(long id){
-        return petRepository.findOneById(id);
+        return petRepository.findOneById(id);//.orElseThrow(()-> new ResourceNotFoundException("No Pet found"));
     }
 
     public List<Pet> getAllPet(){
