@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.ArrayList;
 
 @Service
 @Transactional
@@ -24,6 +25,7 @@ public class PetService {
     public Pet save(Pet pet){
         Pet returnedPet= petRepository.save(pet);
 
+        //this.addPetToCustomer(pet,pet.getCustomer());
         Customer customer = returnedPet.getCustomer();
         customer.addPet(returnedPet);
         customerRepository.save(customer);
@@ -43,5 +45,20 @@ public class PetService {
     public List<Pet> findAllByCustomerId(long ownerId) {
         return petRepository.findAllByCustomerId(ownerId);
     }
+
+    public void addPetToCustomer(Pet pet, Customer customer){
+        List<Pet> pets = customer.getPets();
+        if (pets != null) {
+            pets.add(pet);
+        }else {
+            pets = new ArrayList<Pet>();
+            pets.add(pet);
+        }
+
+        customer.setPets(pets);
+        customerRepository.save(customer);
+    }
+
+
 }
 

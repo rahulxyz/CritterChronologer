@@ -8,6 +8,9 @@ import com.udacity.jdnd.course3.critter.user.CustomerDTO;
 import com.udacity.jdnd.course3.critter.user.EmployeeDTO;
 import org.springframework.beans.BeanUtils;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class Utils {
     public static Pet convertDTOToPetEntity(PetDTO petDTO){
         Pet pet = new Pet();
@@ -42,6 +45,12 @@ public class Utils {
     public static CustomerDTO convertEntityToCustomerDTO(Customer customer){
         CustomerDTO customerDTO = new CustomerDTO();
         BeanUtils.copyProperties(customer, customerDTO);
+        List<Pet> pets = customer.getPets();
+        List<Long> petIds = pets.stream()
+                .map(pet -> pet.getId())
+                .collect(Collectors.toList());
+        customerDTO.setPetIds(petIds);
+
         return customerDTO;
     }
 }

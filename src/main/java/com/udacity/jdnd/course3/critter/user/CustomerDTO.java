@@ -46,6 +46,7 @@ public class CustomerDTO {
     }
 
     public List<Long> getPetIds() {
+
         return petIds;
     }
 

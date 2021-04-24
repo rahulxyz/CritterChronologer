@@ -1,7 +1,9 @@
 package com.udacity.jdnd.course3.critter.entity;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 public class Customer {
@@ -16,10 +18,11 @@ public class Customer {
     private List<Pet> pets;
 
     public void addPet(Pet pet) {
-        if(pets == null){
-           pets = new java.util.ArrayList<>();
+        if(this.pets == null){
+           this.pets = new ArrayList<>();
         }
-        pets.add(pet);
+
+        this.pets.add(pet);
     }
 
     public long getId() {

@@ -27,10 +27,13 @@ public class PetController {
     @PostMapping
     public PetDTO savePet(@RequestBody PetDTO petDTO) {
         Pet pet = Utils.convertDTOToPetEntity(petDTO);
+
+        // from ownerId set Customer in pet
         long customerId = petDTO.getOwnerId();
         Customer customer = customerService.getCustomerById(customerId);
         pet.setCustomer(customer);
 
+        //make sure in customer petIds are updated on save pet
         pet = petService.save(pet);
         petDTO.setId(pet.getId());
         return petDTO;
@@ -39,7 +42,9 @@ public class PetController {
     @GetMapping("/{petId}")
     public PetDTO getPet(@PathVariable long petId) {
        Pet pet = petService.getPetById(petId);
-       return Utils.convertEntityToPetDTO(pet);
+       PetDTO petDTO = Utils.convertEntityToPetDTO(pet);
+       petDTO.setOwnerId(pet.getCustomer().getId());
+       return petDTO;
     }
 
     @GetMapping

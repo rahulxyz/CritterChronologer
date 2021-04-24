@@ -12,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -40,18 +38,17 @@ public class UserController {
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO){
         Customer customer = Utils.convertDTOToCustomerEntity(customerDTO);
 
+        //convert List<petIds> to List<Pet>
         List<Long> petIds = customerDTO.getPetIds();
         List<Pet> petList;
         if(petIds == null){
-            petList = Arrays.asList();
+            petList = new ArrayList<>();
         }else{
             petList = petIds.stream().map(id -> petService.getPetById(id)).collect(Collectors.toList());
         }
-
         customer.setPets(petList);
 
         customer = customerService.save(customer);
-
         customerDTO.setId(customer.getId());
         return customerDTO;
     }
@@ -94,7 +91,7 @@ public class UserController {
 
     @PutMapping("/employee/{employeeId}")
     public void setAvailability(@RequestBody Set<DayOfWeek> daysAvailable, @PathVariable long employeeId) {
-        throw new UnsupportedOperationException();
+        employeeService.setEmployeeAvailability(daysAvailable, employeeId);
     }
 
     @GetMapping("/employee/availability")
